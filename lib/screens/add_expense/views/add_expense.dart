@@ -13,12 +13,12 @@ class AddExpense extends StatefulWidget {
 }
 
 class _AddExpenseState extends State<AddExpense> {
-  TextEditingController _expenseController = TextEditingController();
-  TextEditingController _categoryController = TextEditingController();
-  TextEditingController _dateController = TextEditingController();
+  TextEditingController expenseController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
   DateTime? _selectedDate = DateTime.now();
 
-  List<String> _categoriesIcons = [
+  List<String> categoriesIcons = [
     "Food",
     "Shopping",
     "Health",
@@ -33,7 +33,7 @@ class _AddExpenseState extends State<AddExpense> {
   @override
   void initState() {
     // TODO: implement initState
-    _dateController.text = DateFormat('dd/MM/yy').format(DateTime.now());
+    dateController.text = DateFormat('dd/MM/yy').format(DateTime.now());
     super.initState();
   }
 
@@ -64,7 +64,7 @@ class _AddExpenseState extends State<AddExpense> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: TextFormField(
-                    controller: _expenseController,
+                    controller: expenseController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
@@ -85,7 +85,7 @@ class _AddExpenseState extends State<AddExpense> {
                 TextFormField(
                   readOnly: true,
                   onTap: () {},
-                  controller: _categoryController,
+                  controller: categoryController,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -116,7 +116,7 @@ class _AddExpenseState extends State<AddExpense> {
                                           height: 16,
                                         ),
                                         TextFormField(
-                                          // controller: _dateController,
+                                          // controller:  dateController,
                                           decoration: InputDecoration(
                                             isDense: true,
                                             filled: true,
@@ -139,7 +139,7 @@ class _AddExpenseState extends State<AddExpense> {
                                           height: 16,
                                         ),
                                         TextFormField(
-                                          // controller: _dateController,
+                                          // controller:  dateController,
                                           onTap: () {
                                             setState(() {
                                               isExpaned = !isExpaned;
@@ -197,7 +197,7 @@ class _AddExpenseState extends State<AddExpense> {
                                                       const EdgeInsets.all(8.0),
                                                   child: GridView.builder(
                                                     itemCount:
-                                                        _categoriesIcons.length,
+                                                        categoriesIcons.length,
                                                     itemBuilder:
                                                         (BuildContext context,
                                                             int index) {
@@ -205,7 +205,7 @@ class _AddExpenseState extends State<AddExpense> {
                                                         onTap: () {
                                                           setState(() {
                                                             _selectedIcon =
-                                                                _categoriesIcons[
+                                                                categoriesIcons[
                                                                     index];
                                                           });
                                                         },
@@ -216,7 +216,7 @@ class _AddExpenseState extends State<AddExpense> {
                                                               BoxDecoration(
                                                             border: Border.all(
                                                                 color: _selectedIcon ==
-                                                                        _categoriesIcons[
+                                                                        categoriesIcons[
                                                                             index]
                                                                     ? Theme.of(
                                                                             context)
@@ -227,7 +227,7 @@ class _AddExpenseState extends State<AddExpense> {
                                                                         .colorScheme
                                                                         .outline,
                                                                 width: _selectedIcon ==
-                                                                        _categoriesIcons[
+                                                                        categoriesIcons[
                                                                             index]
                                                                     ? 3
                                                                     : 1),
@@ -238,7 +238,7 @@ class _AddExpenseState extends State<AddExpense> {
                                                             image:
                                                                 DecorationImage(
                                                               image: AssetImage(
-                                                                  "assets/${_categoriesIcons[index]}.png"),
+                                                                  "assets/${categoriesIcons[index]}.png"),
                                                             ),
                                                           ),
                                                         ),
@@ -326,7 +326,7 @@ class _AddExpenseState extends State<AddExpense> {
                                           },
                                           readOnly: true,
 
-                                          // controller: _dateController,
+                                          // controller:  dateController,
                                           decoration: InputDecoration(
                                             isDense: true,
                                             filled: true,
@@ -399,7 +399,7 @@ class _AddExpenseState extends State<AddExpense> {
                   height: 16,
                 ),
                 TextFormField(
-                  controller: _dateController,
+                  controller: dateController,
                   readOnly: true,
                   onTap: () async {
                     DateTime? newDate = await showDatePicker(
@@ -413,7 +413,7 @@ class _AddExpenseState extends State<AddExpense> {
                         ));
 
                     if (newDate != null) {
-                      _dateController.text =
+                      dateController.text =
                           DateFormat('dd/MM/yyyy').format(newDate);
                       _selectedDate = newDate;
                     }

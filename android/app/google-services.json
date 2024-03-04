@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "764513514761",
+    "project_id": "semuny-62126",
+    "storage_bucket": "semuny-62126.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764513514761:android:e9eb473ff6ec9826be8fd8",
+        "android_client_info": {
+          "package_name": "com.example.semuny"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC17ZJZ8GDGSAUSmQV5wqXTFy_KTtRXM1Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
