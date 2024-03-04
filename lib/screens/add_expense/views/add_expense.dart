@@ -30,8 +30,6 @@ class _AddExpenseState extends State<AddExpense> {
     "Trip",
   ];
 
-  String? _selectedIcon;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -102,6 +100,8 @@ class _AddExpenseState extends State<AddExpense> {
                             context: context,
                             builder: (BuildContext context) {
                               bool isExpaned = false;
+                              String? _selectedIcon;
+                              Color? catagoryColor = Colors.white;
                               return StatefulBuilder(
                                   builder: (context, setState) {
                                 return AlertDialog(
@@ -270,25 +270,68 @@ class _AddExpenseState extends State<AddExpense> {
                                                       children: [
                                                         ColorPicker(
                                                             pickerColor:
-                                                                Theme.of(context)
-                                                                    .colorScheme
-                                                                    .primary,
+                                                                catagoryColor!,
                                                             onColorChanged:
                                                                 (color) {
-                                                              print(color);
+                                                              setState(
+                                                                () {
+                                                                  catagoryColor =
+                                                                      color;
+                                                                },
+                                                              );
+                                                              print("===================" +
+                                                                  (color)
+                                                                      .toString());
                                                             }),
+                                                        SizedBox(
+                                                          width:
+                                                              double.infinity,
+                                                          height:
+                                                              kToolbarHeight,
+                                                          child: TextButton(
+                                                              style: TextButton
+                                                                  .styleFrom(
+                                                                backgroundColor: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .tertiary
+                                                                    .withOpacity(
+                                                                        0.8),
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12)),
+                                                              ),
+                                                              onPressed: () {
+                                                                print("===================" +
+                                                                    (catagoryColor)
+                                                                        .toString());
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: const Text(
+                                                                "Select",
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 22,
+                                                                ),
+                                                              )),
+                                                        )
                                                       ],
                                                     ),
                                                   );
                                                 });
-                                          }, 
+                                          },
                                           readOnly: true,
 
                                           // controller: _dateController,
                                           decoration: InputDecoration(
                                             isDense: true,
                                             filled: true,
-                                            fillColor: Colors.white,
+                                            fillColor:
+                                                catagoryColor ?? Colors.white,
                                             prefixIcon: Icon(
                                               FontAwesomeIcons.droplet,
                                               color: Theme.of(context)
@@ -306,6 +349,33 @@ class _AddExpenseState extends State<AddExpense> {
                                         const SizedBox(
                                           height: 16,
                                         ),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: kToolbarHeight,
+                                          child: TextButton(
+                                              style: TextButton.styleFrom(
+                                                backgroundColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .primary
+                                                        .withOpacity(0.8),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                              ),
+                                              onPressed: () {
+                                                //! TODO write to the databse and close the dialog
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text(
+                                                "Add Catagory",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 22,
+                                                ),
+                                              )),
+                                        )
                                       ],
                                     ),
                                   ),
