@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:semuny/screens/add_expense/views/add_expense.dart';
 import 'package:semuny/screens/home/views/main_screen.dart';
 import 'package:semuny/screens/stats/stats.dart';
 
@@ -64,7 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
+        // shape: BoxShape.circle,
+        onPressed: () => {
+          Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const AddExpense(),
+              ))
+        },
+        shape: const CircleBorder(),
         child: Container(
           width: 60,
           height: 60,
@@ -81,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: _selectedIndex == 0 ? MainScreen() : StatsScreen(),
+      body: _selectedIndex == 0 ? const MainScreen() : const StatsScreen(),
     );
   }
 }
