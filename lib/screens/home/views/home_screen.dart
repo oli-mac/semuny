@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:semuny/screens/add_expense/blocs/create_catagory_bloc/create_catagory_bloc.dart';
+import 'package:semuny/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:semuny/screens/add_expense/views/add_expense.dart';
 import 'package:semuny/screens/home/views/main_screen.dart';
 import 'package:semuny/screens/stats/stats.dart';
@@ -73,9 +74,18 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
               context,
               MaterialPageRoute<void>(
-                builder: (BuildContext context) => BlocProvider(
-                  create: (context) =>
-                      CreateCatagoryBloc(FirebaseExpenseRepo()),
+                builder: (BuildContext context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (context) =>
+                          CreateCatagoryBloc(FirebaseExpenseRepo()),
+                    ),
+                    BlocProvider(
+                      create: (context) =>
+                          GetCategoriesBloc(FirebaseExpenseRepo())
+                            ..add(GetCategories()),
+                    ),
+                  ],
                   child: AddExpense(),
                 ),
               ))
