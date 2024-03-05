@@ -3,7 +3,7 @@ class CatagoryEntity {
   String name;
   int totalExpenses;
   String icon;
-  String color;
+  int color;
 
   CatagoryEntity({
     required this.catagoryId,
@@ -30,8 +30,7 @@ class CatagoryEntity {
       name: doc['name'] as String,
       totalExpenses: doc['totalExpenses'] as int,
       icon: doc['icon'] as String,
-      color: doc['color'] as String,
+      color: doc['color'] as int,
     );
   }
-
 }

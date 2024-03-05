@@ -1,4 +1,8 @@
+import 'package:expense_repository/expense_repository.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:semuny/screens/home/bloc/get_expenses_bloc/get_expenses_bloc.dart';
 import 'package:semuny/screens/home/views/home_screen.dart';
 
 class MyAppView extends StatelessWidget {
@@ -17,7 +21,12 @@ class MyAppView extends StatelessWidget {
               secondary: const Color(0xFFE064F7),
               tertiary: const Color(0XFFFF8D6C),
               outline: Colors.grey.shade400)),
-      home: const HomeScreen(),
+      home: BlocProvider(
+        create: (context) => GetExpensesBloc(
+          FirebaseExpenseRepo(),
+        )..add(GetExpenses()),
+        child: HomeScreen(),
+      ),
     );
   }
 }

@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:semuny/screens/add_expense/blocs/create_catagory_bloc/create_catagory_bloc.dart';
 import 'package:uuid/uuid.dart';
 
-getCatagoryCreationView(BuildContext context) {
+Future getCatagoryCreationView(BuildContext context) {
   List<String> categoriesIcons = [
     "Food",
     "Shopping",
@@ -28,6 +28,7 @@ getCatagoryCreationView(BuildContext context) {
         TextEditingController categoryIconController = TextEditingController();
         TextEditingController categoryColorController = TextEditingController();
         bool isLoading = false;
+        Catagory catagory = Catagory.empty;
         return BlocProvider.value(
           value: context.read<CreateCatagoryBloc>(),
           child: StatefulBuilder(builder: (ctx, setState) {
@@ -35,7 +36,7 @@ getCatagoryCreationView(BuildContext context) {
               listener: (context, state) {
                 // TODO: implement listener
                 if (state is CreateCatagorySuccess) {
-                  Navigator.pop(ctx);
+                  Navigator.pop(ctx, catagory);
                 } else if (state is CreateCatagoryLoading) {
                   setState(() {
                     isLoading = true;
@@ -260,18 +261,15 @@ getCatagoryCreationView(BuildContext context) {
                                   //     listen: false);
                                   //! TODO write to the databse and close the dialog
 
-                                  Catagory catagory = Catagory.empty;
                                   setState(() {
                                     catagory.catagoryId = const Uuid().v1();
                                     catagory.name =
                                         categoryNameController.text.toString();
                                     catagory.icon = selectedIcon!;
-                                    catagory.color = catagoryColor.toString();
+                                    catagory.color = catagoryColor!.value;
                                   });
                                   BlocProvider.of<CreateCatagoryBloc>(context)
                                       .add(CreateCategory(catagory: catagory));
-
-                                  Navigator.pop(context);
                                 },
                                 child: const Text(
                                   "Add Catagory",
