@@ -16,6 +16,7 @@ import 'package:semuny/screens/add_income/blocs/create_income_bloc/create_income
 import 'package:semuny/screens/add_income/blocs/create_source_bloc/create_source_bloc.dart';
 import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_bloc.dart';
 import 'package:semuny/screens/add_income/views/add_income.dart';
+import 'package:semuny/screens/auth/views/welcome_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final List<Expense> expenses;
@@ -314,6 +315,16 @@ class _MainScreenState extends State<MainScreen> {
                 //           });
                 //     },
                 //     icon: const Icon(CupertinoIcons.settings)),
+
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WelcomeScreen()),
+                      );
+                    },
+                    icon: Icon(CupertinoIcons.signature))
               ],
             ),
             const SizedBox(
