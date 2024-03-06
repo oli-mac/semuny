@@ -13,14 +13,18 @@ class CreateSourceBloc extends Bloc<CreateSourceEvent, CreateSourceState> {
     on<CreateSource>((event, emit) async {
       emit(CreateSourcesLoading());
       try {
-        print(['------------------Source created pre----------------=', event]);
-        await incomeRepository.createSources(event.source);
+        if (event.sources == null) {
+          print("Error:======== Sources object is null");
+          emit(CreateSourcesFailure());
+          return;
+        }
+        print("Processing Sources object: ${event.sources}");
+        // Corrected line: Use event.sources instead of event.source
+        await incomeRepository.createSources(event.sources);
 
         emit(CreateSourcesSuccess());
       } catch (e) {
-        print('------------------Source created----------------=' +
-            event.source.toString());
-        print(e);
+        print("Error processing CreateSource event: $e");
         emit(CreateSourcesFailure());
       }
     });
