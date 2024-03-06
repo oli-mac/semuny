@@ -4,9 +4,15 @@ import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:income_repository/income_repository.dart';
 import 'package:semuny/screens/add_expense/blocs/create_catagory_bloc/create_catagory_bloc.dart';
 import 'package:semuny/screens/add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import 'package:semuny/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
+import 'package:semuny/screens/add_expense/blocs/create_catagory_bloc/create_catagory_bloc.dart';
+import 'package:semuny/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
+import 'package:semuny/screens/add_income/blocs/create_income_bloc/create_income_bloc.dart';
+import 'package:semuny/screens/add_income/blocs/create_source_bloc/create_source_bloc.dart';
+import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_bloc.dart';
 // import 'package:semuny/screens/home/bloc/get_expenses_bloc/get_expenses_bloc.dart';
 
 import 'package:semuny/screens/add_expense/views/add_expense.dart';
@@ -98,11 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               create: (context) =>
                                   CreateExpenseBloc(FirebaseExpenseRepo()),
                             ),
-                            // BlocProvider(
-                            //   create: (context) =>
-                            //       GetCategoriesBloc(FirebaseExpenseRepo())
-                            //         ..add(GetCategories()),
-                            // ),
                           ],
                           child: AddExpense(),
                         ),

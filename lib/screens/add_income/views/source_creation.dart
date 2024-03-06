@@ -259,8 +259,26 @@ Future getSourceCreationView(BuildContext context) {
                                   source.icon = selectedIcon!;
                                   source.color = sourceColor!.value;
                                 });
-                                print("---------------------------"+source.icon+source.name+source.sourcesId+source.color.toString() + "---------------------------");
-                                BlocProvider.of<CreateSourceBloc>(context)
+                                print("---------------------------" +
+                                    source.icon +
+                                    "---" +
+                                    source.name +
+                                    "---" +
+                                    source.sourcesId +
+                                    "---" +
+                                    source.color.toString() +
+                                    "---------------------------");
+                                // BlocProvider.of<CreateSourceBloc>(context).add(
+                                //     CreateSource(
+                                //         sources: Sources(
+                                //             sourcesId: "2",
+                                //             name: "name",
+                                //             icon:
+                                //                 "90c3f330-99fc-1ef7-865c-5725576d9cd6",
+                                //             color: 4292547347)));
+
+                                context
+                                    .read<CreateSourceBloc>()
                                     .add(CreateSource(sources: source));
                               },
                               child: const Text(

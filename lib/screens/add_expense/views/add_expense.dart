@@ -122,6 +122,9 @@ class _AddExpenseState extends State<AddExpense> {
                               onPressed: () async {
                                 var newCatagory =
                                     await getCatagoryCreationView(context);
+                                print("------------------" +
+                                    newCatagory +
+                                    "------------------");
                                 setState(() {
                                   state.categories.insert(0, newCatagory);
                                 });

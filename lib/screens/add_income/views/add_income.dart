@@ -120,9 +120,12 @@ class _AddIncomeState extends State<AddIncome> {
                               onPressed: () async {
                                 var newSource =
                                     await getSourceCreationView(context);
-                                setState(() {
-                                  state.sources.insert(0, newSource);
-                                });
+                                print("-----------newSource-------" +
+                                    newSource +
+                                    "------------------");
+                                // setState(() {
+                                //   state.sources.insert(0, newSource);
+                                // });
                               },
                               icon: const Icon(
                                 FontAwesomeIcons.plus,
