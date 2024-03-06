@@ -8,15 +8,11 @@ import 'package:uuid/uuid.dart';
 
 Future getSourceCreationView(BuildContext context) {
   List<String> sourceIcons = [
-    "Food",
-    "Shopping",
-    "Health",
-    "House",
-    "Education",
-    "Entertainment",
-    "Technology",
-    "wifi",
-    "Trip",
+    "Allowance",
+    "Bonus",
+    "Freelance",
+    "Gift",
+    "Work",
   ];
   return showDialog(
     context: context,
@@ -147,7 +143,7 @@ Future getSourceCreationView(BuildContext context) {
                                         borderRadius: BorderRadius.circular(12),
                                         image: DecorationImage(
                                           image: AssetImage(
-                                              "assets/${sourceIcons[index]}.png"),
+                                              "assets/source/${sourceIcons[index]}.png"),
                                         ),
                                       ),
                                     ),

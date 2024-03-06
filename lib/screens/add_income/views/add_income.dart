@@ -1,10 +1,9 @@
 import 'dart:math';
 
-import 'package:expense_repository/expense_repository.dart';
+import 'package:income_repository/income_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:income_repository/income_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:semuny/screens/add_income/blocs/create_income_bloc/create_income_bloc.dart';
 import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_bloc.dart';
@@ -112,7 +111,7 @@ class _AddIncomeState extends State<AddIncome> {
                                 : Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Image.asset(
-                                      "assets/${income.sources.icon}.png",
+                                      "assets/source/${income.sources.icon}.png",
                                       scale: 25,
                                     ),
                                   ),
@@ -120,12 +119,12 @@ class _AddIncomeState extends State<AddIncome> {
                               onPressed: () async {
                                 var newSource =
                                     await getSourceCreationView(context);
-                                print("-----------newSource-------" +
+                                print("------------------" +
                                     newSource +
                                     "------------------");
-                                // setState(() {
-                                //   state.sources.insert(0, newSource);
-                                // });
+                                setState(() {
+                                  state.sources.insert(0, newSource);
+                                });
                               },
                               icon: const Icon(
                                 FontAwesomeIcons.plus,
@@ -141,7 +140,118 @@ class _AddIncomeState extends State<AddIncome> {
                                 borderSide: BorderSide.none),
                           ),
                         ),
-                        // Add the rest of your UI elements here, similar to the expense view
+                        Container(
+                            height: 200,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(12)),
+                            ),
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ListView.builder(
+                                  itemCount: state.sources.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      child: ListTile(
+                                          onTap: () {
+                                            setState(() {
+                                              income.sources =
+                                                  state.sources[index];
+                                              sourceController.text =
+                                                  income.sources.name;
+                                            });
+                                          },
+                                          leading: Image.asset(
+                                            "assets/source/${state.sources[index].icon}.png",
+                                            scale: 6,
+                                          ),
+                                          title: Text(
+                                              "${state.sources[index].name}"),
+                                          tileColor:
+                                              Color(state.sources[index].color),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          )),
+                                    );
+                                  },
+                                ))),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        TextFormField(
+                          controller: dateController,
+                          readOnly: true,
+                          onTap: () async {
+                            DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: income.date,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime.now().add(
+                                  const Duration(
+                                    days: 365,
+                                  ),
+                                ));
+
+                            if (newDate != null) {
+                              dateController.text =
+                                  DateFormat('dd/MM/yyyy').format(newDate);
+                              income.date = newDate;
+                            }
+                          },
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            prefixIcon: Icon(
+                              FontAwesomeIcons.clock,
+                              color: Theme.of(context).colorScheme.outline,
+                              size: 16,
+                            ),
+                            hintText: "Date",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide.none),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: kToolbarHeight,
+                          child: isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : TextButton(
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary
+                                        .withOpacity(0.8),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      income.amount =
+                                          int.parse(incomeController.text);
+
+                                      BlocProvider.of<CreateIncomeBloc>(context)
+                                          .add(CreateIncome(income));
+                                    });
+                                  },
+                                  child: const Text(
+                                    "Save",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                    ),
+                                  )),
+                        )
                       ],
                     ),
                   );

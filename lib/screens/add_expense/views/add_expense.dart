@@ -114,7 +114,7 @@ class _AddExpenseState extends State<AddExpense> {
                                 : Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Image.asset(
-                                      "assets/${expense.category.icon}.png",
+                                      "assets/catagory/${expense.category.icon}.png",
                                       scale: 25,
                                     ),
                                   ),
