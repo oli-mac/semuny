@@ -4,6 +4,7 @@ import 'package:semuny/app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:semuny/firebase_options.dart';
 import 'package:semuny/simple_bloc_observer.dart';
+import 'package:user_repository/user_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,5 +12,5 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Bloc.observer = SimpleBlocObserver();
-  runApp(const MyApp());
+  runApp( MyApp(FirebaseUserRepo()));
 }

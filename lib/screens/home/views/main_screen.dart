@@ -3,12 +3,33 @@ import 'dart:math';
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:income_repository/income_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:semuny/data/data.dart';
+import 'package:semuny/screens/add_expense/blocs/create_catagory_bloc/create_catagory_bloc.dart';
+import 'package:semuny/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
+import 'package:semuny/screens/add_income/blocs/create_income_bloc/create_income_bloc.dart';
+import 'package:semuny/screens/add_income/blocs/create_source_bloc/create_source_bloc.dart';
+import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_bloc.dart';
+import 'package:semuny/screens/add_income/views/add_income.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   final List<Expense> expenses;
   const MainScreen(this.expenses, {super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  double calculateTotalExpenses(List<Expense> expenses) {
+    double total = 0;
+    for (var expense in expenses) {
+      total += expense.amount;
+    }
+    return total;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +84,44 @@ class MainScreen extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                    onPressed: () {}, icon: const Icon(CupertinoIcons.settings))
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute<Income>(
+                          builder: (BuildContext context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                create: (context) =>
+                                    CreateSourceBloc(FirebaseIncomeRepo()),
+                              ),
+                              BlocProvider(
+                                create: (context) =>
+                                    GetSourcesBloc(FirebaseIncomeRepo())
+                                      ..add(GetSources()),
+                              ),
+                              BlocProvider(
+                                create: (context) =>
+                                    CreateIncomeBloc(FirebaseIncomeRepo()),
+                              ),
+                              // Assuming you have a similar Bloc for handling incomes
+                              // BlocProvider(
+                              //   create: (context) => GetIncomesBloc(FirebaseExpenseRepo())
+                              //     ..add(GetIncomes()),
+                              // ),
+                            ],
+                            child:
+                                AddIncome(), // Navigate to the AddIncome page
+                          ),
+                        ),
+                      );
+//  if (newIncome != null) {
+//     setState(() {
+//       // Assuming you have a list of incomes in your state
+//       state.incomes.insert(0, newIncome);
+//     });
+//  }
+                    },
+                    icon: const Icon(CupertinoIcons.settings))
               ],
             ),
             const SizedBox(
@@ -171,7 +229,7 @@ class MainScreen extends StatelessWidget {
                               const SizedBox(
                                 width: 8,
                               ),
-                              const Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -182,7 +240,7 @@ class MainScreen extends StatelessWidget {
                                         fontWeight: FontWeight.w600),
                                   ),
                                   Text(
-                                    '800 ETB',
+                                    '-${calculateTotalExpenses(widget.expenses)} ETB',
                                     style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.white,
@@ -227,7 +285,7 @@ class MainScreen extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: expenses.length,
+                  itemCount: widget.expenses.length,
                   itemBuilder: (context, int i) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
@@ -250,8 +308,8 @@ class MainScreen extends StatelessWidget {
                                       height: 50,
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color:
-                                            Color(expenses[i].category.color),
+                                        color: Color(
+                                            widget.expenses[i].category.color),
                                       ),
                                       // child: const Icon(CupertinoIcons.person)
                                     ),
@@ -260,8 +318,8 @@ class MainScreen extends StatelessWidget {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Image.asset(
-                                        "assets/${expenses[i].category.icon}.png",
-                                        scale: 25,
+                                        "assets/${widget.expenses[i].category.icon}.png",
+                                        scale: 18,
                                         color: Colors.white,
                                       ),
                                     ),
@@ -273,7 +331,7 @@ class MainScreen extends StatelessWidget {
                                 const SizedBox(
                                   width: 12,
                                 ),
-                                Text(expenses[i].category.name,
+                                Text(widget.expenses[i].category.name,
                                     style: TextStyle(
                                         fontSize: 14,
                                         color: Theme.of(context)
@@ -285,7 +343,8 @@ class MainScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    expenses[i].amount.toString() + ".00 ETB",
+                                    widget.expenses[i].amount.toString() +
+                                        ".00 ETB",
                                     style: TextStyle(
                                         fontSize: 14,
                                         color: Theme.of(context)
@@ -295,7 +354,7 @@ class MainScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     DateFormat('dd/MM/yyyy')
-                                        .format(expenses[i].date),
+                                        .format(widget.expenses[i].date),
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: Theme.of(context)
