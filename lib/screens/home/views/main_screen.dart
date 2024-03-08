@@ -33,6 +33,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  
+
   double calculateTotalExpenses(List<Expense> expenses) {
     double total = 0;
     for (var expense in expenses) {
@@ -84,7 +86,7 @@ class _MainScreenState extends State<MainScreen> {
                               color: Theme.of(context).colorScheme.outline),
                         ),
                         Text(
-                          "Olyad M",
+                          "_getUserName()",
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -95,211 +97,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   ],
                 ),
-                // IconButton(
-                //     onPressed: () {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => DetailsScreen()),
-                //       );
-                //     },
-                //     icon: const Icon(CupertinoIcons.info_circle)),
-                // IconButton(
-                //     onPressed: () async {
-                //       showDialog(
-                //           // barrierColor: Theme.of(context).colorScheme.outline,
-                //           context: context,
-                //           builder: (ctx2) {
-                //             return AlertDialog(
-                //                 backgroundColor: Colors.white,
-                //                 content: SizedBox(
-                //                   width: MediaQuery.of(context).size.width,
-                //                   height: MediaQuery.of(context).size.width / 3,
-                //                   child: Row(
-                //                     mainAxisAlignment:
-                //                         MainAxisAlignment.spaceAround,
-                //                     crossAxisAlignment:
-                //                         CrossAxisAlignment.center,
-                //                     children: [
-                //                       Material(
-                //                         elevation:
-                //                             5.0, // Adjust the elevation to control the shadow
-                //                         shadowColor: Colors.grey.withOpacity(
-                //                             0.5), // Customize the shadow color
-                //                         borderRadius: BorderRadius.circular(
-                //                             12), // Match the border radius of your container
-                //                         child: InkWell(
-                //                           onTap: () async {
-                //                             await Navigator.push(
-                //                               context,
-                //                               MaterialPageRoute<Income>(
-                //                                 builder:
-                //                                     (BuildContext context) =>
-                //                                         MultiBlocProvider(
-                //                                   providers: [
-                //                                     BlocProvider(
-                //                                       create: (context) =>
-                //                                           CreateSourceBloc(
-                //                                               FirebaseIncomeRepo()),
-                //                                     ),
-                //                                     BlocProvider(
-                //                                       create: (context) =>
-                //                                           GetSourcesBloc(
-                //                                               FirebaseIncomeRepo())
-                //                                             ..add(GetSources()),
-                //                                     ),
-                //                                     BlocProvider(
-                //                                       create: (context) =>
-                //                                           CreateIncomeBloc(
-                //                                               FirebaseIncomeRepo()),
-                //                                     ),
-                //                                   ],
-                //                                   child:
-                //                                       const AddIncome(), // Navigate to the AddIncome page
-                //                                 ),
-                //                               ),
-                //                             );
-                //                           },
-                //                           child: Column(
-                //                             children: [
-                //                               Container(
-                //                                 width: MediaQuery.of(context)
-                //                                         .size
-                //                                         .width /
-                //                                     4,
-                //                                 height: MediaQuery.of(context)
-                //                                         .size
-                //                                         .width /
-                //                                     4,
-                //                                 decoration: BoxDecoration(
-                //                                   color: Colors.transparent,
-                //                                   border: Border.all(
-                //                                     width: 1,
-                //                                     color: Colors.transparent,
-                //                                   ),
-                //                                   borderRadius:
-                //                                       BorderRadius.circular(12),
-                //                                 ),
-                //                                 child: Image.asset(
-                //                                   "assets/income.png",
-                //                                   scale: 7,
-                //                                   color: Colors.green,
-                //                                 ),
-                //                               ),
-                //                               const SizedBox(
-                //                                 height: 8,
-                //                               ),
-                //                               const Text(
-                //                                 "Add Income",
-                //                                 style: TextStyle(
-                //                                   fontSize: 16,
-                //                                   fontWeight: FontWeight.w600,
-                //                                   color: Colors.green,
-                //                                 ),
-                //                               )
-                //                             ],
-                //                           ),
-                //                         ),
-                //                       ),
-                //                       Material(
-                //                         elevation:
-                //                             5.0, // Adjust the elevation to control the shadow
-                //                         shadowColor: Colors.grey.withOpacity(
-                //                             0.5), // Customize the shadow color
-                //                         borderRadius: BorderRadius.circular(
-                //                             12), // Match the border radius of your container
-                //                         child: Padding(
-                //                           padding: const EdgeInsets.symmetric(
-                //                               horizontal: 10.0, vertical: 1.0),
-                //                           child: InkWell(
-                //                             onTap: () async {
-                //                               Expense? newExpense =
-                //                                   await Navigator.push(
-                //                                 context,
-                //                                 MaterialPageRoute<Expense>(
-                //                                   builder:
-                //                                       (BuildContext context) =>
-                //                                           MultiBlocProvider(
-                //                                     providers: [
-                //                                       BlocProvider(
-                //                                         create: (context) =>
-                //                                             CreateCatagoryBloc(
-                //                                                 FirebaseExpenseRepo()),
-                //                                       ),
-                //                                       BlocProvider(
-                //                                         create: (context) =>
-                //                                             GetCategoriesBloc(
-                //                                                 FirebaseExpenseRepo())
-                //                                               ..add(
-                //                                                   GetCategories()),
-                //                                       ),
-                //                                       BlocProvider(
-                //                                         create: (context) =>
-                //                                             CreateExpenseBloc(
-                //                                                 FirebaseExpenseRepo()),
-                //                                       ),
-                //                                     ],
-                //                                     child: AddExpense(),
-                //                                   ),
-                //                                 ),
-                //                               );
-                //                               if (newExpense != null) {
-                //                                 // Assuming you have a way to add new expenses to the bloc
-                //                                 // This might need to be adjusted based on your actual implementation
-                //                               }
-                //                             },
-                //                             child: Column(
-                //                               children: [
-                //                                 Container(
-                //                                   width: MediaQuery.of(context)
-                //                                           .size
-                //                                           .width /
-                //                                       4,
-                //                                   height: MediaQuery.of(context)
-                //                                           .size
-                //                                           .width /
-                //                                       4,
-                //                                   decoration: BoxDecoration(
-                //                                     color: Colors.transparent,
-                //                                     border: Border.all(
-                //                                       color: Colors.transparent,
-                //                                       width: 1,
-                //                                     ),
-                //                                     borderRadius:
-                //                                         BorderRadius.circular(
-                //                                             12),
-                //                                   ),
-                //                                   child: Image.asset(
-                //                                     "assets/expense.png",
-                //                                     scale: 7,
-                //                                     color: Color.fromARGB(
-                //                                         173, 158, 17, 17),
-                //                                   ),
-                //                                 ),
-                //                                 const SizedBox(
-                //                                   height: 8,
-                //                                 ),
-                //                                 const Text(
-                //                                   "Add Expense",
-                //                                   style: TextStyle(
-                //                                     fontSize: 16,
-                //                                     fontWeight: FontWeight.w600,
-                //                                     color: Color.fromARGB(
-                //                                         255, 158, 17, 17),
-                //                                   ),
-                //                                 )
-                //                               ],
-                //                             ),
-                //                           ),
-                //                         ),
-                //                       )
-                //                     ],
-                //                   ),
-                //                 ));
-                //           });
-                //     },
-                //     icon: const Icon(CupertinoIcons.settings)),
-
+                
                 IconButton(
                   onPressed: () async {
                     // Clear the user's login status
@@ -581,4 +379,8 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+  Future<String> _getUserName() async {
+ final prefs = await SharedPreferences.getInstance();
+ return prefs.getString('userName') ?? 'User'; // Default to 'User' if not found
+}
 }

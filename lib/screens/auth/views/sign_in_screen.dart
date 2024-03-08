@@ -32,7 +32,7 @@ class _SignInScreenState extends State<SignInScreen> {
         if (state is SignInSuccess) {
           setState(() {
             signInRequired = false;
-            _handleSignInSuccess(context, state.userId);
+            _handleSignInSuccess( state.userId);
           });
         } else if (state is SignInProcess) {
           setState(() {
@@ -141,16 +141,17 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Future<void> _handleSignInSuccess(
-      BuildContext context, String? userId) async {
+  Future<void> _handleSignInSuccess(String? userId) async {
     if (userId != null) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('userId', userId); // Now userId is not null
       // Navigate to HomeScreen
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
     } else {
       // Handle the case where userId is null, if necessary
       print('-------------------User ID is null-----------------------');

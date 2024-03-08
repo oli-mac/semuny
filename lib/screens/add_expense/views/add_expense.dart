@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,11 +43,41 @@ class _AddExpenseState extends State<AddExpense> {
       listener: (context, state) {
         // TODO: implement listener
         if (state is CreateExpenseSuccess) {
+          ElegantNotification.success(
+            width: 360,
+            position: Alignment.topCenter,
+            animation: AnimationType.fromRight,
+            title: const Text('Update'),
+            description: const Text('Expence has been Created Succesfully'),
+            // onDismiss: () {
+            //   print('Message when the notification is dismissed');
+            // },
+            // onTap: () {
+            //   print('Message when the notification is pressed');
+            // },
+            closeOnTap: true,
+          ).show(context);
           Navigator.pop(context, expense);
         } else if (state is CreateExpenseLoading) {
           setState(() {
             isLoading = true;
           });
+        } else if (state is CreateExpenseFailure) {
+          ElegantNotification.error(
+            width: 360,
+            position: Alignment.topCenter,
+            animation: AnimationType.fromRight,
+            title: const Text('Error'),
+            description: const Text(
+                'Failed to create expense Please Check your connection and try again!'),
+            // onDismiss: () {
+            //   print('Message when the notification is dismissed');
+            // },
+            // onTap: () {
+            //   print('Message when the notification is pressed');
+            // },
+            closeOnTap: true,
+          ).show(context);
         }
       },
       child: GestureDetector(
@@ -259,7 +291,7 @@ class _AddExpenseState extends State<AddExpense> {
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        SnackBar(
+                                        const SnackBar(
                                             content: Text(
                                                 'User ID not found. Please log in again.')),
                                       );

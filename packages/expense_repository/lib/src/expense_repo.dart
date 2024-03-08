@@ -6,5 +6,5 @@ abstract class ExpenseRepository {
   Future<List<Catagory>> getCatagories();
   Future<void> createExpense(Expense expense);
 
-  Future<List<Expense>> getExpenses();
+  Future<List<Expense>> getExpenses(String userId );
 }

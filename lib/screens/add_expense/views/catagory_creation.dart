@@ -1,3 +1,5 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,11 +38,41 @@ Future getCatagoryCreationView(BuildContext context) {
               listener: (context, state) {
                 // TODO: implement listener
                 if (state is CreateCatagorySuccess) {
+                  ElegantNotification.success(
+                    width: 360,
+                    position: Alignment.topCenter,
+                    animation: AnimationType.fromRight,
+                    title: const Text('Update'),
+                    description:
+                        const Text('Catagory has been Created Succesfully'),
+                    // onDismiss: () {
+                    //   print('Message when the notification is dismissed');
+                    // },
+                    // onTap: () {
+                    //   print('Message when the notification is pressed');
+                    // },
+                    closeOnTap: true,
+                  ).show(context);
                   Navigator.pop(ctx, catagory);
                 } else if (state is CreateCatagoryLoading) {
                   setState(() {
                     isLoading = true;
                   });
+                } else if (state is CreateCatagoryFailure) {
+                  ElegantNotification.error(
+                    width: 360,
+                    position: Alignment.topCenter,
+                    animation: AnimationType.fromRight,
+                    title: const Text('Error'),
+                    description: const Text('Failed to create Catagory'),
+                    // onDismiss: () {
+                    //   print('Message when the notification is dismissed');
+                    // },
+                    // onTap: () {
+                    //   print('Message when the notification is pressed');
+                    // },
+                    closeOnTap: true,
+                  ).show(context);
                 }
               },
               child: AlertDialog(

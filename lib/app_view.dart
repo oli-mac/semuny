@@ -1,5 +1,4 @@
 import 'package:expense_repository/expense_repository.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:income_repository/income_repository.dart';
@@ -29,23 +28,40 @@ class MyAppView extends StatelessWidget {
         future: _isUserLoggedIn(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.data == true) {
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (context) => GetExpensesBloc(
-                    FirebaseExpenseRepo(),
-                  )..add(GetExpenses()),
-                ),
-                BlocProvider(
-                  create: (context) => GetIncomesBloc(
-                    FirebaseIncomeRepo(), // Assuming you have a similar repository for incomes
-                  )..add(
-                      GetIncomes()), // Assuming you have a similar event for fetching incomes
-                ),
-              ],
-              child: const HomeScreen(),
+            return FutureBuilder<String>(
+              future: _getUserId(context),
+              builder: (context, userIdSnapshot) {
+                if (userIdSnapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (userIdSnapshot.hasData) {
+                  print(
+                      '-------------------User passed ID: ${userIdSnapshot.data}-----------------------------');
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider(
+                        create: (context) => GetExpensesBloc(
+                          FirebaseExpenseRepo(),
+                          userIdSnapshot.data!, // Pass the user ID to the bloc
+                        )..add(GetExpenses()),
+                      ),
+                      BlocProvider(
+                        create: (context) => GetIncomesBloc(
+                          FirebaseIncomeRepo(),
+                          userIdSnapshot
+                              .data!, // Assuming you have a similar repository for incomes
+                        )..add(
+                            GetIncomes()), // Assuming you have a similar event for fetching incomes
+                      ),
+                    ],
+                    child: const HomeScreen(),
+                  );
+                } else {
+                  // Handle the case where the user ID is not found
+                  return const WelcomeScreen();
+                }
+              },
             );
           } else {
             // Assuming you have a WelcomeScreen for new users
@@ -59,6 +75,15 @@ class MyAppView extends StatelessWidget {
   Future<bool> _isUserLoggedIn(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    print(
+        '-------------------Is Logged In: $isLoggedIn-----------------------');
     return isLoggedIn;
+  }
+
+  Future<String> _getUserId(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId') ?? '';
+    print('-------------------User ID: $userId-----------------------------');
+    return userId;
   }
 }

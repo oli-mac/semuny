@@ -6,5 +6,5 @@ abstract class IncomeRepository {
   Future<List<Sources>> getSources();
   Future<void> createIncome(Income income);
 
-  Future<List<Income>> getIncomes();
+  Future<List<Income>> getIncomes(String userId);
 }

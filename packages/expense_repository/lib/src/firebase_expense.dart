@@ -35,13 +35,12 @@ class FirebaseExpenseRepo implements ExpenseRepository {
     }
   }
 
-  
   @override
   Future<void> createExpense(Expense expense) async {
     try {
       await expenseCollection
-        .doc(expense.expenseId)
-        .set(expense.toEntity().toDocument());
+          .doc(expense.expenseId)
+          .set(expense.toEntity().toDocument());
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -49,13 +48,15 @@ class FirebaseExpenseRepo implements ExpenseRepository {
   }
 
   @override
-  Future<List<Expense>> getExpenses() async {
+  Future<List<Expense>> getExpenses(String userId) async {
     try {
       return await expenseCollection
-        .get()
-        .then((value) => value.docs.map((e) => 
-          Expense.fromEntity(ExpenseEntity.fromDocument(e.data()))
-        ).toList());
+          .where('expenseId', isEqualTo: userId)
+          .get()
+          .then((value) => value.docs
+              .map((e) =>
+                  Expense.fromEntity(ExpenseEntity.fromDocument(e.data())))
+              .toList());
     } catch (e) {
       log(e.toString());
       rethrow;

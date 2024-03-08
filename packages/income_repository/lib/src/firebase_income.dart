@@ -45,11 +45,15 @@ class FirebaseIncomeRepo implements IncomeRepository {
   }
 
   @override
-  Future<List<Income>> getIncomes() async {
+  Future<List<Income>> getIncomes(String userId) async {
     try {
-      return await incomeCollection.get().then((value) => value.docs
-          .map((e) => Income.fromEntity(IncomeEntity.fromDocument(e.data())))
-          .toList());
+      return await incomeCollection
+          .where('incomeId', isEqualTo: userId)
+          .get()
+          .then((value) => value.docs
+              .map(
+                  (e) => Income.fromEntity(IncomeEntity.fromDocument(e.data())))
+              .toList());
     } catch (e) {
       log(e.toString());
       rethrow;
