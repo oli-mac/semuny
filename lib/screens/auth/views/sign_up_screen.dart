@@ -210,52 +210,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ] else ...[
                 const SizedBox(height: 0),
               ],
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Text(
-              //           "⚈  Password must include atleast 1 Uppercase letter",
-              //           style: TextStyle(
-              //               color: containsUpperCase
-              //                   ? Colors.green
-              //                   : Theme.of(context).colorScheme.onBackground),
-              //         ),
-              //         Text(
-              //           "⚈  Password must include atleast 1 lowercase letter",
-              //           style: TextStyle(
-              //               color: containsLowerCase
-              //                   ? Colors.green
-              //                   : Theme.of(context).colorScheme.onBackground),
-              //         ),
-              //         Text(
-              //           "⚈  Password must include atleast 1 number",
-              //           style: TextStyle(
-              //               color: containsNumber
-              //                   ? Colors.green
-              //                   : Theme.of(context).colorScheme.onBackground),
-              //         ),
-              //         Text(
-              //           "⚈  Password must include atleast 1 special character",
-              //           style: TextStyle(
-              //               color: containsSpecialChar
-              //                   ? Colors.green
-              //                   : Theme.of(context).colorScheme.onBackground),
-              //         ),
-              //         Text(
-              //           "⚈  Password must include atleast 8 minimum character",
-              //           style: TextStyle(
-              //               color: contains8Length
-              //                   ? Colors.green
-              //                   : Theme.of(context).colorScheme.onBackground),
-              //         ),
-              //       ],
-              //     ),
-              //   ],
-              // ),
               const SizedBox(height: 10),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,

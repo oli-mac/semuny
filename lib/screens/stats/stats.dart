@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:income_repository/income_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:semuny/screens/home/views/components/income_details_screen.dart';
 import 'package:semuny/screens/stats/charts.dart';
 
 class StatsScreen extends StatefulWidget {
@@ -76,78 +77,88 @@ class _StatsScreenState extends State<StatsScreen> {
               child: ListView.builder(
                   itemCount: widget.income.length,
                   itemBuilder: (context, int i) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(children: [
-                                Stack(
-                                  alignment: Alignment.center,
+                    return GestureDetector(
+                      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IncomeDetailsScreen(transaction: widget.income[i]),
+          ),
+        );
+      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(
+                                              widget.income[i].sources.color),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(
+                                          "assets/source/${widget.income[i].sources.icon}.png",
+                                          scale: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(widget.income[i].sources.name,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground,
+                                          fontWeight: FontWeight.w600)),
+                                ]),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Color(
-                                            widget.income[i].sources.color),
-                                      ),
+                                    Text(
+                                      widget.income[i].amount.toString() +
+                                          ".00 ETB",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outline,
+                                          fontWeight: FontWeight.w400),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.asset(
-                                        "assets/source/${widget.income[i].sources.icon}.png",
-                                        scale: 18,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    Text(
+                                      DateFormat('dd/MM/yyyy')
+                                          .format(widget.income[i].date),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outline,
+                                          fontWeight: FontWeight.w600),
+                                    )
                                   ],
                                 ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Text(widget.income[i].sources.name,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
-                                        fontWeight: FontWeight.w600)),
-                              ]),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    widget.income[i].amount.toString() +
-                                        ".00 ETB",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .outline,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  Text(
-                                    DateFormat('dd/MM/yyyy')
-                                        .format(widget.income[i].date),
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .outline,
-                                        fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:semuny/screens/add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import 'package:semuny/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:semuny/screens/add_expense/views/catagory_creation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class AddExpense extends StatefulWidget {
@@ -30,7 +31,7 @@ class _AddExpenseState extends State<AddExpense> {
     // TODO: implement initState
     dateController.text = DateFormat('dd/MM/yy').format(DateTime.now());
     expense = Expense.empty;
-    expense.expenseId = Uuid().v1();
+    // expense.expenseId = Uuid().v1();
     super.initState();
   }
 
@@ -168,7 +169,7 @@ class _AddExpenseState extends State<AddExpense> {
                                             });
                                           },
                                           leading: Image.asset(
-                                            "assets/${state.categories[index].icon}.png",
+                                            "assets/catagory/${state.categories[index].icon}.png",
                                             scale: 6,
                                           ),
                                           title: Text(
@@ -239,15 +240,30 @@ class _AddExpenseState extends State<AddExpense> {
                                         borderRadius:
                                             BorderRadius.circular(12)),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      expense.amount =
-                                          int.parse(expenseController.text);
+                                  onPressed: () async {
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    final userId = prefs.getString('userId');
 
-                                      BlocProvider.of<CreateExpenseBloc>(
-                                              context)
-                                          .add(CreateExpense(expense));
-                                    });
+                                    if (userId != null) {
+                                      setState(() {
+                                        expense.amount =
+                                            int.parse(expenseController.text);
+                                        expense.expenseId =
+                                            userId; // Assuming your Expense model has a userId field
+
+                                        BlocProvider.of<CreateExpenseBloc>(
+                                                context)
+                                            .add(CreateExpense(expense));
+                                      });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'User ID not found. Please log in again.')),
+                                      );
+                                    }
                                   },
                                   child: const Text(
                                     "Save",

@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:income_repository/income_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:semuny/data/data.dart';
@@ -17,6 +18,8 @@ import 'package:semuny/screens/add_income/blocs/create_source_bloc/create_source
 import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_bloc.dart';
 import 'package:semuny/screens/add_income/views/add_income.dart';
 import 'package:semuny/screens/auth/views/welcome_screen.dart';
+import 'package:semuny/screens/home/views/components/expense_details_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
   final List<Expense> expenses;
@@ -92,34 +95,15 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   ],
                 ),
-                IconButton(
-                    onPressed: () async {
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute<Income>(
-                          builder: (BuildContext context) => MultiBlocProvider(
-                            providers: [
-                              BlocProvider(
-                                create: (context) =>
-                                    CreateSourceBloc(FirebaseIncomeRepo()),
-                              ),
-                              BlocProvider(
-                                create: (context) =>
-                                    GetSourcesBloc(FirebaseIncomeRepo())
-                                      ..add(GetSources()),
-                              ),
-                              BlocProvider(
-                                create: (context) =>
-                                    CreateIncomeBloc(FirebaseIncomeRepo()),
-                              ),
-                            ],
-                            child:
-                                const AddIncome(), // Navigate to the AddIncome page
-                          ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(CupertinoIcons.info_circle)),
+                // IconButton(
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => DetailsScreen()),
+                //       );
+                //     },
+                //     icon: const Icon(CupertinoIcons.info_circle)),
                 // IconButton(
                 //     onPressed: () async {
                 //       showDialog(
@@ -317,14 +301,26 @@ class _MainScreenState extends State<MainScreen> {
                 //     icon: const Icon(CupertinoIcons.settings)),
 
                 IconButton(
-                    onPressed: () {
-                      Navigator.push(
+                  onPressed: () async {
+                    // Clear the user's login status
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.remove('isLoggedIn');
+                    await prefs.remove('userId');
+
+                    // Check if the widget is still mounted before navigating
+                    if (mounted) {
+                      // Navigate to the WelcomeScreen and remove all previous routes
+                      Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
                             builder: (context) => WelcomeScreen()),
+                        (Route<dynamic> route) =>
+                            false, // This removes all routes and pushes WelcomeScreen as the only route in the stack
                       );
-                    },
-                    icon: Icon(CupertinoIcons.signature))
+                    }
+                  },
+                  icon: Icon(FontAwesomeIcons.signOutAlt),
+                )
               ],
             ),
             const SizedBox(
@@ -490,79 +486,90 @@ class _MainScreenState extends State<MainScreen> {
               child: ListView.builder(
                   itemCount: widget.expenses.length,
                   itemBuilder: (context, int i) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(children: [
-                                Stack(
-                                  alignment: Alignment.center,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ExpenseDetailsScreen(
+                                transaction: widget.expenses[i]),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(children: [
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(widget
+                                              .expenses[i].category.color),
+                                        ),
+                                        // child: const Icon(CupertinoIcons.person)
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(
+                                          "assets/catagory/${widget.expenses[i].category.icon}.png",
+                                          scale: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    width: 12,
+                                  ),
+                                  Text(widget.expenses[i].category.name,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground,
+                                          fontWeight: FontWeight.w600)),
+                                ]),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Color(
-                                            widget.expenses[i].category.color),
-                                      ),
-                                      // child: const Icon(CupertinoIcons.person)
+                                    Text(
+                                      widget.expenses[i].amount.toString() +
+                                          ".00 ETB",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outline,
+                                          fontWeight: FontWeight.w400),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Image.asset(
-                                        "assets/catagory/${widget.expenses[i].category.icon}.png",
-                                        scale: 18,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    Text(
+                                      DateFormat('dd/MM/yyyy')
+                                          .format(widget.expenses[i].date),
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outline,
+                                          fontWeight: FontWeight.w600),
+                                    )
                                   ],
                                 ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Text(widget.expenses[i].category.name,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
-                                        fontWeight: FontWeight.w600)),
-                              ]),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    widget.expenses[i].amount.toString() +
-                                        ".00 ETB",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .outline,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  Text(
-                                    DateFormat('dd/MM/yyyy')
-                                        .format(widget.expenses[i].date),
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .outline,
-                                        fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

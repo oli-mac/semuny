@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:semuny/screens/add_income/blocs/create_income_bloc/create_income_bloc.dart';
 import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_bloc.dart';
 import 'package:semuny/screens/add_income/views/source_creation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class AddIncome extends StatefulWidget {
@@ -235,14 +236,28 @@ class _AddIncomeState extends State<AddIncome> {
                                         borderRadius:
                                             BorderRadius.circular(12)),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      income.amount =
-                                          int.parse(incomeController.text);
+                                  onPressed: () async {
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    final userId = prefs.getString('userId');
+                                    if (userId != null) {
+                                      setState(() {
+                                        income.amount =
+                                            int.parse(incomeController.text);
+                                        income.incomeId = userId;
 
-                                      BlocProvider.of<CreateIncomeBloc>(context)
-                                          .add(CreateIncome(income));
-                                    });
+                                        BlocProvider.of<CreateIncomeBloc>(
+                                                context)
+                                            .add(CreateIncome(income));
+                                      });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'User ID not found. Please log in again.')),
+                                      );
+                                    }
                                   },
                                   child: const Text(
                                     "Save",

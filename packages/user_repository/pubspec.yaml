@@ -12,6 +12,8 @@ dependencies:
   equatable: ^2.0.5
   firebase_auth: ^4.10.0
   cloud_firestore: ^4.9.2
+  shared_preferences: ^2.2.2
+
 
 dev_dependencies:
   flutter_test:
