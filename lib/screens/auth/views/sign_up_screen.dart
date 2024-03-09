@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:semuny/screens/auth/blocs/sign_up_bloc/sign_up_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,20 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           setState(() {
             signUpRequired = false;
           });
-           ElegantNotification.success(
-            width: 360,
-            position: Alignment.topCenter,
-            animation: AnimationType.fromRight,
-            title: Text('Update'),
-            description: Text('Signed up successfully! Please login to continue.'),
-            // onDismiss: () {
-            //   print('Message when the notification is dismissed');
-            // },
-            // onTap: () {
-            //   print('Message when the notification is pressed');
-            // },
-            closeOnTap: true,
-          ).show(context);
+          //TODO: Show a success message
           // Store the user's name in SharedPreferences
           // _storeUserName(nameController.text);
           // Navigator.pop(context);
@@ -64,20 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             signUpRequired = true;
           });
         } else if (state is SignUpFailure) {
-          ElegantNotification.error(
-                    width: 360,
-                    position: Alignment.topCenter,
-                    animation: AnimationType.fromRight,
-                    title: const Text('Error'),
-                    description: const Text('Failed TO Signed up successfully! Please Check your connection and try again!'),
-                    // onDismiss: () {
-                    //   print('Message when the notification is dismissed');
-                    // },
-                    // onTap: () {
-                    //   print('Message when the notification is pressed');
-                    // },
-                    closeOnTap: true,
-                  ).show(context);
+          // Show an error message
           return;
         }
       },

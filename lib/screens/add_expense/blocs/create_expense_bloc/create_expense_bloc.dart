@@ -7,12 +7,14 @@ part 'create_expense_state.dart';
 
 class CreateExpenseBloc extends Bloc<CreateExpenseEvent, CreateExpenseState> {
   ExpenseRepository expenseRepository;
+  String userID;
 
-  CreateExpenseBloc(this.expenseRepository) : super(CreateExpenseInitial()) {
+
+  CreateExpenseBloc(this.expenseRepository, this.userID) : super(CreateExpenseInitial()) {
     on<CreateExpense>((event, emit) async {
       emit(CreateExpenseLoading());
       try {
-        await expenseRepository.createExpense(event.expense);
+        await expenseRepository.createExpense(event.expense,userID);
         emit(CreateExpenseSuccess());
       } catch (e) {
         emit(CreateExpenseFailure());

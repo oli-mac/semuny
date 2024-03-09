@@ -1,5 +1,3 @@
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -33,42 +31,15 @@ Future getSourceCreationView(BuildContext context) {
           return BlocListener<CreateSourceBloc, CreateSourceState>(
             listener: (context, state) {
               if (state is CreateSourcesSuccess) {
-                ElegantNotification.success(
-                  width: 360,
-                  position: Alignment.topCenter,
-                  animation: AnimationType.fromRight,
-                  title: const Text('Update'),
-                  description:
-                      const Text('Income has been Created Succesfully'),
-                  // onDismiss: () {
-                  //   print('Message when the notification is dismissed');
-                  // },
-                  // onTap: () {
-                  //   print('Message when the notification is pressed');
-                  // },
-                  closeOnTap: true,
-                ).show(context);
+                //TODO: Add a success notification
                 Navigator.pop(ctx, source);
               } else if (state is CreateSourcesLoading) {
                 setState(() {
                   isLoading = true;
                 });
               } else if (state is CreateSourcesFailure) {
-                ElegantNotification.error(
-                  width: 360,
-                  position: Alignment.topCenter,
-                  animation: AnimationType.fromRight,
-                  title: const Text('Error'),
-                  description: const Text(
-                      'Source could not be created Please Check your connection and try again!'),
-                  // onDismiss: () {
-                  //   print('Message when the notification is dismissed');
-                  // },
-                  // onTap: () {
-                  //   print('Message when the notification is pressed');
-                  // },
-                  closeOnTap: true,
-                ).show(context);
+                //TODO: Add a failure notification
+
                 setState(() {
                   isLoading = false;
                 });

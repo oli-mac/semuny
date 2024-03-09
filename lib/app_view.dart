@@ -76,6 +76,8 @@ class MyAppView extends StatelessWidget {
     final prefs = await SharedPreferences.getInstance();
     final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     print(
+        '-------------------Is Logged In pref: ${prefs.getBool('isLoggedIn')}-----------------------');
+    print(
         '-------------------Is Logged In: $isLoggedIn-----------------------');
     return isLoggedIn;
   }

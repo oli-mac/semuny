@@ -1,12 +1,11 @@
 import 'dart:math';
 
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
 import 'package:income_repository/income_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:semuny/app_view.dart';
 import 'package:semuny/screens/add_income/blocs/create_income_bloc/create_income_bloc.dart';
 import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_bloc.dart';
 import 'package:semuny/screens/add_income/views/source_creation.dart';
@@ -32,7 +31,17 @@ class _AddIncomeState extends State<AddIncome> {
     dateController.text = DateFormat('dd/MM/yy').format(DateTime.now());
     income = Income.empty;
     income.incomeId = Uuid().v1();
+    print(
+        "----------------------------------- + income.incomeId + -----------------------------------");
     super.initState();
+  }
+
+  @override
+  dispose() {
+    incomeController.dispose();
+    sourceController.dispose();
+    dateController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,40 +49,17 @@ class _AddIncomeState extends State<AddIncome> {
     return BlocListener<CreateIncomeBloc, CreateIncomeState>(
       listener: (context, state) {
         if (state is CreateIncomeSuccess) {
-          ElegantNotification.success(
-            width: 360,
-            position: Alignment.topCenter,
-            animation: AnimationType.fromRight,
-            title: const Text('Update'),
-            description: const Text('Income has been Created Succesfully'),
-            // onDismiss: () {
-            //   print('Message when the notification is dismissed');
-            // },
-            // onTap: () {
-            //   print('Message when the notification is pressed');
-            // },
-            closeOnTap: true,
-          ).show(context);
-          Navigator.pop(context, income);
+          //TODO: Show success message
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MyAppView()),
+          );
         } else if (state is CreateIncomeLoading) {
           setState(() {
             isLoading = true;
           });
         } else if (state is CreateIncomeFailure) {
-          ElegantNotification.error(
-            width: 360,
-            position: Alignment.topCenter,
-            animation: AnimationType.fromRight,
-            title: const Text('Error'),
-            description: const Text('Income could not be created Please Check your connection and try again!'),
-            // onDismiss: () {
-            //   print('Message when the notification is dismissed');
-            // },
-            // onTap: () {
-            //   print('Message when the notification is pressed');
-            // },
-            closeOnTap: true,
-          ).show(context);
+          //TODO: Show error message
           setState(() {
             isLoading = false;
           });
@@ -278,7 +264,7 @@ class _AddIncomeState extends State<AddIncome> {
                                       setState(() {
                                         income.amount =
                                             int.parse(incomeController.text);
-                                        income.incomeId = userId;
+                                        income.incomeId = Uuid().v1();
 
                                         BlocProvider.of<CreateIncomeBloc>(
                                                 context)

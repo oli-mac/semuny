@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:semuny/app_view.dart';
 import 'package:semuny/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:semuny/screens/auth/views/components/my_text_field.dart';
 import 'package:semuny/screens/home/views/home_screen.dart';
@@ -32,7 +33,7 @@ class _SignInScreenState extends State<SignInScreen> {
         if (state is SignInSuccess) {
           setState(() {
             signInRequired = false;
-            _handleSignInSuccess( state.userId);
+            _handleSignInSuccess(state.userId);
           });
         } else if (state is SignInProcess) {
           setState(() {
@@ -147,9 +148,11 @@ class _SignInScreenState extends State<SignInScreen> {
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('userId', userId); // Now userId is not null
       // Navigate to HomeScreen
+      print('-------------------isLoggedIn is set-----------------------');
+
       if (mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const MyAppView()),
         );
       }
     } else {

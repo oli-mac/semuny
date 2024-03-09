@@ -33,11 +33,12 @@ class FirebaseIncomeRepo implements IncomeRepository {
   }
 
   @override
-  Future<void> createIncome(Income income) async {
+  Future<void> createIncome(Income income, String userId) async {
     try {
-      await incomeCollection
-          .doc(income.incomeId)
-          .set(income.toEntity().toDocument());
+      await incomeCollection.add({
+        ...income.toEntity().toDocument(),
+        'userId': userId,
+      });
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -47,16 +48,34 @@ class FirebaseIncomeRepo implements IncomeRepository {
   @override
   Future<List<Income>> getIncomes(String userId) async {
     try {
-      return await incomeCollection
-          .where('incomeId', isEqualTo: userId)
-          .get()
-          .then((value) => value.docs
-              .map(
-                  (e) => Income.fromEntity(IncomeEntity.fromDocument(e.data())))
-              .toList());
+      // Get all documents where 'userId' equals the provided userId
+      final querySnapshot =
+          await incomeCollection.where('userId', isEqualTo: userId).get();
+
+      // Map each document to an Income object
+      return querySnapshot.docs
+          .map(
+              (doc) => Income.fromEntity(IncomeEntity.fromDocument(doc.data())))
+          .toList();
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
+
+  // @override
+  // Future<List<Income>> getIncomes(String userId) async {
+  //   try {
+  //     return await incomeCollection
+  //         .where('incomeId', isEqualTo: userId)
+  //         .get()
+  //         .then((value) => value.docs
+  //             .map(
+  //                 (e) => Income.fromEntity(IncomeEntity.fromDocument(e.data())))
+  //             .toList());
+  //   } catch (e) {
+  //     log(e.toString());
+  //     rethrow;
+  //   }
+  // }
 }

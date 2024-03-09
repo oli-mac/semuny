@@ -19,6 +19,7 @@ import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_blo
 import 'package:semuny/screens/add_income/views/add_income.dart';
 import 'package:semuny/screens/auth/views/welcome_screen.dart';
 import 'package:semuny/screens/home/views/components/expense_details_screen.dart';
+import 'package:semuny/screens/home/views/selection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
@@ -33,8 +34,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  
-
   double calculateTotalExpenses(List<Expense> expenses) {
     double total = 0;
     for (var expense in expenses) {
@@ -79,25 +78,33 @@ class _MainScreenState extends State<MainScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Welcome!",
+                          " Wellcome back to!",
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).colorScheme.outline),
                         ),
                         Text(
-                          "_getUserName()",
+                          "ስሙኒ",
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color:
                                   Theme.of(context).colorScheme.onBackground),
-                        )
+                        ),
                       ],
                     ),
                   ],
                 ),
-                
+                // IconButton(
+                //   onPressed: () async {
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => SelectionScreen()));
+                //   },
+                //   icon: Icon(FontAwesomeIcons.info),
+                // ),
                 IconButton(
                   onPressed: () async {
                     // Clear the user's login status
@@ -112,8 +119,8 @@ class _MainScreenState extends State<MainScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => WelcomeScreen()),
-                        (Route<dynamic> route) =>
-                            false, // This removes all routes and pushes WelcomeScreen as the only route in the stack
+                        (Route<dynamic> route) => false,
+                        // This removes all routes and pushes WelcomeScreen as the only route in the stack
                       );
                     }
                   },
@@ -379,8 +386,10 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+
   Future<String> _getUserName() async {
- final prefs = await SharedPreferences.getInstance();
- return prefs.getString('userName') ?? 'User'; // Default to 'User' if not found
-}
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userName') ??
+        'User'; // Default to 'User' if not found
+  }
 }

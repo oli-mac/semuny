@@ -1,12 +1,11 @@
 import 'dart:math';
 
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:semuny/app_view.dart';
 import 'package:semuny/screens/add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import 'package:semuny/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:semuny/screens/add_expense/views/catagory_creation.dart';
@@ -43,41 +42,44 @@ class _AddExpenseState extends State<AddExpense> {
       listener: (context, state) {
         // TODO: implement listener
         if (state is CreateExpenseSuccess) {
-          ElegantNotification.success(
-            width: 360,
-            position: Alignment.topCenter,
-            animation: AnimationType.fromRight,
-            title: const Text('Update'),
-            description: const Text('Expence has been Created Succesfully'),
-            // onDismiss: () {
-            //   print('Message when the notification is dismissed');
-            // },
-            // onTap: () {
-            //   print('Message when the notification is pressed');
-            // },
-            closeOnTap: true,
-          ).show(context);
-          Navigator.pop(context, expense);
+          // ElegantNotification.success(
+          //   width: 360,
+          //   position: Alignment.topCenter,
+          //   animation: AnimationType.fromRight,
+          //   title: const Text('Update'),
+          //   description: const Text('Expence has been Created Succesfully'),
+          //   // onDismiss: () {
+          //   //   print('Message when the notification is dismissed');
+          //   // },
+          //   // onTap: () {
+          //   //   print('Message when the notification is pressed');
+          //   // },
+          //   closeOnTap: true,
+          // ).show(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MyAppView()),
+          );
         } else if (state is CreateExpenseLoading) {
           setState(() {
             isLoading = true;
           });
         } else if (state is CreateExpenseFailure) {
-          ElegantNotification.error(
-            width: 360,
-            position: Alignment.topCenter,
-            animation: AnimationType.fromRight,
-            title: const Text('Error'),
-            description: const Text(
-                'Failed to create expense Please Check your connection and try again!'),
-            // onDismiss: () {
-            //   print('Message when the notification is dismissed');
-            // },
-            // onTap: () {
-            //   print('Message when the notification is pressed');
-            // },
-            closeOnTap: true,
-          ).show(context);
+          // ElegantNotification.error(
+          //   width: 360,
+          //   position: Alignment.topCenter,
+          //   animation: AnimationType.fromRight,
+          //   title: const Text('Error'),
+          //   description: const Text(
+          //       'Failed to create expense Please Check your connection and try again!'),
+          //   // onDismiss: () {
+          //   //   print('Message when the notification is dismissed');
+          //   // },
+          //   // onTap: () {
+          //   //   print('Message when the notification is pressed');
+          //   // },
+          //   closeOnTap: true,
+          // ).show(context);
         }
       },
       child: GestureDetector(

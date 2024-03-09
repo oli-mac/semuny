@@ -57,7 +57,8 @@ dependencies:
   uuid: ^4.3.3
   flutter_launcher_icons: ^0.13.1
   shared_preferences: ^2.2.2
-  elegant_notification: ^1.13.1
+  awesome_notifications: ^0.9.2
+
 
 dev_dependencies:
   flutter_test:

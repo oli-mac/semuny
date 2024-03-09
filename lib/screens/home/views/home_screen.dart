@@ -1,3 +1,4 @@
+// import 'dart:html';
 import 'dart:math';
 
 import 'package:expense_repository/expense_repository.dart';
@@ -16,7 +17,9 @@ import 'package:semuny/screens/home/bloc/get_expenses_bloc/get_expenses_bloc.dar
 import 'package:semuny/screens/home/bloc/get_incomes_bloc/get_incomes_bloc.dart'; // Import the GetIncomesBloc
 import 'package:semuny/screens/add_expense/views/add_expense.dart';
 import 'package:semuny/screens/home/views/main_screen.dart';
+import 'package:semuny/screens/home/views/selection.dart';
 import 'package:semuny/screens/stats/stats.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,7 +29,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Future<String> _getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('userId') ?? '';
+    return userId;
+  }
+
   int _selectedIndex = 0;
+  double totalIncomes = 0.0;
+  bool incomesLoaded = false;
   late Color selectedItemColor = Theme.of(context).colorScheme.primary;
   late Color? unselectedItemColor = Colors.grey[400];
 
@@ -65,182 +76,194 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          showDialog(
-              // barrierColor: Theme.of(context).colorScheme.outline,
-              context: context,
-              builder: (ctx2) {
-                return AlertDialog(
-                    backgroundColor: Colors.white,
-                    content: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width / 3,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Material(
-                            elevation:
-                                5.0, // Adjust the elevation to control the shadow
-                            shadowColor: Colors.grey
-                                .withOpacity(0.5), // Customize the shadow color
-                            borderRadius: BorderRadius.circular(
-                                12), // Match the border radius of your container
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: InkWell(
-                                onTap: () async {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute<Income>(
-                                      builder: (BuildContext context) =>
-                                          MultiBlocProvider(
-                                        providers: [
-                                          BlocProvider(
-                                            create: (context) =>
-                                                CreateSourceBloc(
-                                                    FirebaseIncomeRepo()),
-                                          ),
-                                          BlocProvider(
-                                            create: (context) => GetSourcesBloc(
-                                                FirebaseIncomeRepo())
-                                              ..add(GetSources()),
-                                          ),
-                                          BlocProvider(
-                                            create: (context) =>
-                                                CreateIncomeBloc(
-                                                    FirebaseIncomeRepo()),
-                                          ),
-                                        ],
-                                        child:
-                                            const AddIncome(), // Navigate to the AddIncome page
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width:
-                                          MediaQuery.of(context).size.width / 4,
-                                      height:
-                                          MediaQuery.of(context).size.width / 4,
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.transparent,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Image.asset(
-                                        "assets/income.png",
-                                        scale: 7,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    const Text(
-                                      "Add Income",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.green,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Material(
-                            elevation:
-                                5.0, // Adjust the elevation to control the shadow
-                            shadowColor: Colors.grey
-                                .withOpacity(0.5), // Customize the shadow color
-                            borderRadius: BorderRadius.circular(
-                                12), // Match the border radius of your container
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 1.0),
-                              child: InkWell(
-                                onTap: () async {
-                                  Expense? newExpense = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute<Expense>(
-                                      builder: (BuildContext context) =>
-                                          MultiBlocProvider(
-                                        providers: [
-                                          BlocProvider(
-                                            create: (context) =>
-                                                CreateCatagoryBloc(
-                                                    FirebaseExpenseRepo()),
-                                          ),
-                                          BlocProvider(
-                                            create: (context) =>
-                                                GetCategoriesBloc(
-                                                    FirebaseExpenseRepo())
-                                                  ..add(GetCategories()),
-                                          ),
-                                          BlocProvider(
-                                            create: (context) =>
-                                                CreateExpenseBloc(
-                                                    FirebaseExpenseRepo()),
-                                          ),
-                                        ],
-                                        child: AddExpense(),
-                                      ),
-                                    ),
-                                  );
-                                  if (newExpense != null) {
-                                    // Assuming you have a way to add new expenses to the bloc
-                                    // This might need to be adjusted based on your actual implementation
-                                  }
-                                },
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width:
-                                          MediaQuery.of(context).size.width / 4,
-                                      height:
-                                          MediaQuery.of(context).size.width / 4,
-                                      decoration: BoxDecoration(
-                                        color: Colors.transparent,
-                                        border: Border.all(
-                                          color: Colors.transparent,
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Image.asset(
-                                        "assets/expense.png",
-                                        scale: 7,
-                                        color: Color.fromARGB(173, 158, 17, 17),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    const Text(
-                                      "Add Expense",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color.fromARGB(255, 158, 17, 17),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ));
-              });
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SelectionScreen()));
         },
+
+        //   showDialog(
+        //       // barrierColor: Theme.of(context).colorScheme.outline,
+        //       context: context,
+        //       builder: (ctx2) {
+        //         return AlertDialog(
+        //             backgroundColor: Colors.white,
+        //             content: SizedBox(
+        //               width: MediaQuery.of(context).size.width,
+        //               height: MediaQuery.of(context).size.width / 3,
+        //               child: Row(
+        //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //                 crossAxisAlignment: CrossAxisAlignment.center,
+        //                 children: [
+        //                   Material(
+        //                     elevation:
+        //                         5.0, // Adjust the elevation to control the shadow
+        //                     shadowColor: Colors.grey
+        //                         .withOpacity(0.5), // Customize the shadow color
+        //                     borderRadius: BorderRadius.circular(
+        //                         12), // Match the border radius of your container
+        //                     child: Padding(
+        //                       padding:
+        //                           const EdgeInsets.symmetric(horizontal: 10.0),
+        //                       child: InkWell(
+        //                         onTap: () async {
+        //                           final userId = await _getUserId();
+        //                           if (userId.isNotEmpty) {
+        //                             await Navigator.push(
+        //                               context,
+        //                               MaterialPageRoute<Income>(
+        //                                 builder: (BuildContext context) =>
+        //                                     MultiBlocProvider(
+        //                                   providers: [
+        //                                     BlocProvider(
+        //                                       create: (context) =>
+        //                                           CreateSourceBloc(
+        //                                               FirebaseIncomeRepo()),
+        //                                     ),
+        //                                     BlocProvider(
+        //                                       create: (context) =>
+        //                                           GetSourcesBloc(
+        //                                               FirebaseIncomeRepo())
+        //                                             ..add(GetSources()),
+        //                                     ),
+        //                                     BlocProvider(
+        //                                       create: (context) =>
+        //                                           CreateIncomeBloc(
+        //                                               FirebaseIncomeRepo(),
+        //                                               userId),
+        //                                     ),
+        //                                   ],
+        //                                   child: const AddIncome(),
+        //                                 ),
+        //                               ),
+        //                             );
+        //                           }
+        //                         },
+        //                         child: Column(
+        //                           children: [
+        //                             Container(
+        //                               width:
+        //                                   MediaQuery.of(context).size.width / 4,
+        //                               height:
+        //                                   MediaQuery.of(context).size.width / 4,
+        //                               decoration: BoxDecoration(
+        //                                 color: Colors.transparent,
+        //                                 border: Border.all(
+        //                                   width: 1,
+        //                                   color: Colors.transparent,
+        //                                 ),
+        //                                 borderRadius: BorderRadius.circular(12),
+        //                               ),
+        //                               child: Image.asset(
+        //                                 "assets/income.png",
+        //                                 scale: 7,
+        //                                 color: Colors.green,
+        //                               ),
+        //                             ),
+        //                             const SizedBox(
+        //                               height: 8,
+        //                             ),
+        //                             const Text(
+        //                               "Add Income",
+        //                               style: TextStyle(
+        //                                 fontSize: 16,
+        //                                 fontWeight: FontWeight.w600,
+        //                                 color: Colors.green,
+        //                               ),
+        //                             )
+        //                           ],
+        //                         ),
+        //                       ),
+        //                     ),
+        //                   ),
+        //                   Material(
+        //                     elevation:
+        //                         5.0, // Adjust the elevation to control the shadow
+        //                     shadowColor: Colors.grey
+        //                         .withOpacity(0.5), // Customize the shadow color
+        //                     borderRadius: BorderRadius.circular(
+        //                         12), // Match the border radius of your container
+        //                     child: Padding(
+        //                       padding: const EdgeInsets.symmetric(
+        //                           horizontal: 10.0, vertical: 1.0),
+        //                       child: InkWell(
+        //                         onTap: () async {
+        //                           final userId = await _getUserId();
+        //                           if (userId.isNotEmpty) {
+        //                             Expense? newExpense = await Navigator.push(
+        //                               context,
+        //                               MaterialPageRoute<Expense>(
+        //                                 builder: (BuildContext context) =>
+        //                                     MultiBlocProvider(
+        //                                   providers: [
+        //                                     BlocProvider(
+        //                                       create: (context) =>
+        //                                           CreateCatagoryBloc(
+        //                                               FirebaseExpenseRepo()),
+        //                                     ),
+        //                                     BlocProvider(
+        //                                       create: (context) =>
+        //                                           GetCategoriesBloc(
+        //                                               FirebaseExpenseRepo())
+        //                                             ..add(GetCategories()),
+        //                                     ),
+        //                                     BlocProvider(
+        //                                       create: (context) =>
+        //                                           CreateExpenseBloc(
+        //                                               FirebaseExpenseRepo(),
+        //                                               userId),
+        //                                     ),
+        //                                   ],
+        //                                   child: AddExpense(),
+        //                                 ),
+        //                               ),
+        //                             );
+        //                             if (newExpense != null) {
+        //                               // Assuming you have a way to add new expenses to the bloc
+        //                               // This might need to be adjusted based on your actual implementation
+        //                             }
+        //                           }
+        //                         },
+        //                         child: Column(
+        //                           children: [
+        //                             Container(
+        //                               width:
+        //                                   MediaQuery.of(context).size.width / 4,
+        //                               height:
+        //                                   MediaQuery.of(context).size.width / 4,
+        //                               decoration: BoxDecoration(
+        //                                 color: Colors.transparent,
+        //                                 border: Border.all(
+        //                                   color: Colors.transparent,
+        //                                   width: 1,
+        //                                 ),
+        //                                 borderRadius: BorderRadius.circular(12),
+        //                               ),
+        //                               child: Image.asset(
+        //                                 "assets/expense.png",
+        //                                 scale: 7,
+        //                                 color: Color.fromARGB(173, 158, 17, 17),
+        //                               ),
+        //                             ),
+        //                             const SizedBox(
+        //                               height: 8,
+        //                             ),
+        //                             const Text(
+        //                               "Add Expense",
+        //                               style: TextStyle(
+        //                                 fontSize: 16,
+        //                                 fontWeight: FontWeight.w600,
+        //                                 color: Color.fromARGB(255, 158, 17, 17),
+        //                               ),
+        //                             )
+        //                           ],
+        //                         ),
+        //                       ),
+        //                     ),
+        //                   )
+        //                 ],
+        //               ),
+        //             ));
+        //       });
+        // },
         shape: const CircleBorder(),
         child: Container(
           width: 60,
@@ -267,16 +290,47 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, expensesState) {
                 if (expensesState is GetExpensesSuccess) {
                   // Calculate total incomes
-                  double totalIncomes = 0.0;
-                  if (BlocProvider.of<GetIncomesBloc>(context).state
-                      is GetIncomesSuccess) {
-                    totalIncomes = (BlocProvider.of<GetIncomesBloc>(context)
-                            .state as GetIncomesSuccess)
-                        .incomes
-                        .fold(0, (sum, income) => sum + income.amount);
-                  }
-                  return MainScreen(expensesState.expenses, totalIncomes);
+                  // double totalIncomes = 0.0;
+                  // BlocProvider.of<GetIncomesBloc>(context).add(GetIncomes());
+                  // print(
+                  //     "--------------------Total Incomes======================");
+                  return BlocBuilder<GetIncomesBloc, GetIncomesState>(
+                    builder: (context, state) {
+                      if (BlocProvider.of<GetIncomesBloc>(context).state
+                          is GetIncomesSuccess) {
+                        // totalIncomes = (BlocProvider.of<GetIncomesBloc>(context)
+                        //         .state as GetIncomesSuccess)
+                        if (state is GetIncomesSuccess) {
+                          // totalIncomes = (state as GetIncomesSuccess)
+                          //     .incomes
+                          //     .fold(0, (sum, income) => sum + income.amount);
+                          // incomesLoaded = true;
+                          double totalIncomes = state.incomes
+                              .fold(0, (sum, income) => sum + income.amount);
+
+                          // if (totalIncomes != 0.0) {
+                          return MainScreen(
+                              expensesState.expenses, totalIncomes);
+                        }
+
+                        // BlocProvider.of<GetIncomesBloc>(context)
+                        //     .add(GetIncomesSuccess());
+                        BlocProvider.of<GetIncomesBloc>(context)
+                            .add(GetIncomes());
+                        return const Center(
+                            child: CircularProgressIndicator(
+                          color: Colors.red,
+                        ));
+                      }
+                      return const Center(
+                          child: CircularProgressIndicator(
+                        color: Colors.green,
+                      ));
+                    },
+                  );
                 } else {
+                  print("------------here---------");
+                  BlocProvider.of<GetExpensesBloc>(context).add(GetExpenses());
                   return const Center(child: CircularProgressIndicator());
                 }
               },
@@ -286,10 +340,41 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (incomesState is GetIncomesSuccess) {
                   return StatsScreen(incomesState.incomes);
                 } else {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.purple,
+                  ));
                 }
               },
             ),
     );
   }
 }
+
+
+
+
+
+
+
+
+// BlocBuilder<GetExpensesBloc, GetExpensesState>(
+//               builder: (context, expensesState) {
+//                 if (expensesState is GetExpensesSuccess) {
+//                   // Calculate total incomes
+//                   double totalIncomes = 0.0;
+//                   if (BlocProvider.of<GetIncomesBloc>(context).state
+//                       is GetIncomesSuccess) {
+//                     totalIncomes = (BlocProvider.of<GetIncomesBloc>(context)
+//                             .state as GetIncomesSuccess)
+//                         .incomes
+//                         .fold(0, (sum, income) => sum + income.amount);
+//                   }
+//                   return MainScreen(expensesState.expenses, totalIncomes);
+//                 } else {
+//                   return const Center(child: CircularProgressIndicator());
+//                 }
+//               },
+//             )
+
+
