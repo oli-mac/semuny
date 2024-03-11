@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:semuny/screens/auth/blocs/sign_up_bloc/sign_up_bloc.dart';
+import 'package:semuny/utils/notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,15 +42,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
             signUpRequired = false;
           });
           //TODO: Show a success message
-          // Store the user's name in SharedPreferences
-          // _storeUserName(nameController.text);
-          // Navigator.pop(context);
+          NotificationService.showNotification(
+            title: "User Created",
+            body:
+                "Hello ${nameController.text} You have been signed up ! please login to continue",
+            // icon: "assets/income.png",
+            color: Colors.blue,
+          );
         } else if (state is SignUpProcess) {
           setState(() {
             signUpRequired = true;
           });
         } else if (state is SignUpFailure) {
           // Show an error message
+          NotificationService.showNotification(
+            title: "User Creation Faild",
+            body:
+                "Hello ${nameController.text} Account creation failed, please try again later !",
+            // icon: "assets/income.png",
+            color: Colors.blue,
+          );
           return;
         }
       },

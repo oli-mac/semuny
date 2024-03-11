@@ -9,6 +9,7 @@ import 'package:semuny/app_view.dart';
 import 'package:semuny/screens/add_expense/blocs/create_expense_bloc/create_expense_bloc.dart';
 import 'package:semuny/screens/add_expense/blocs/get_categories_bloc/get_categories_bloc.dart';
 import 'package:semuny/screens/add_expense/views/catagory_creation.dart';
+import 'package:semuny/utils/notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -42,44 +43,27 @@ class _AddExpenseState extends State<AddExpense> {
       listener: (context, state) {
         // TODO: implement listener
         if (state is CreateExpenseSuccess) {
-          // ElegantNotification.success(
-          //   width: 360,
-          //   position: Alignment.topCenter,
-          //   animation: AnimationType.fromRight,
-          //   title: const Text('Update'),
-          //   description: const Text('Expence has been Created Succesfully'),
-          //   // onDismiss: () {
-          //   //   print('Message when the notification is dismissed');
-          //   // },
-          //   // onTap: () {
-          //   //   print('Message when the notification is pressed');
-          //   // },
-          //   closeOnTap: true,
-          // ).show(context);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MyAppView()),
           );
+          NotificationService.showNotification(
+                    title: "Expense Created",
+                    body: "Expense of ${expense.amount}ETB has been created",
+                    // icon: "assets/income.png",
+                    color: Colors.blue,
+                  );
         } else if (state is CreateExpenseLoading) {
           setState(() {
             isLoading = true;
           });
         } else if (state is CreateExpenseFailure) {
-          // ElegantNotification.error(
-          //   width: 360,
-          //   position: Alignment.topCenter,
-          //   animation: AnimationType.fromRight,
-          //   title: const Text('Error'),
-          //   description: const Text(
-          //       'Failed to create expense Please Check your connection and try again!'),
-          //   // onDismiss: () {
-          //   //   print('Message when the notification is dismissed');
-          //   // },
-          //   // onTap: () {
-          //   //   print('Message when the notification is pressed');
-          //   // },
-          //   closeOnTap: true,
-          // ).show(context);
+          NotificationService.showNotification(
+                    title: "Expense Creation Failed",
+                    body: "Expense of ${expense.amount}ETB has not been created",
+                    // icon: "assets/income.png",
+                    color: Colors.blue,
+                  );
         }
       },
       child: GestureDetector(

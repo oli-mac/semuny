@@ -1,10 +1,10 @@
-
 import 'package:expense_repository/expense_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:semuny/screens/add_expense/blocs/create_catagory_bloc/create_catagory_bloc.dart';
+import 'package:semuny/utils/notification_service.dart';
 import 'package:uuid/uuid.dart';
 
 Future getCatagoryCreationView(BuildContext context) {
@@ -38,13 +38,25 @@ Future getCatagoryCreationView(BuildContext context) {
                 // TODO: implement listener
                 if (state is CreateCatagorySuccess) {
                   //TODO NOTIFICATION
+
                   Navigator.pop(ctx, catagory);
+                  NotificationService.showNotification(
+                    title: "Catagory Created",
+                    body: "Catagory ${catagory.name} has been created",
+                    // icon: "assets/income.png",
+                    color: Colors.blue,
+                  );
                 } else if (state is CreateCatagoryLoading) {
                   setState(() {
                     isLoading = true;
                   });
                 } else if (state is CreateCatagoryFailure) {
-                  
+                  NotificationService.showNotification(
+                    title: "Error Creating cattagory ",
+                    body: "Catagory ${catagory.name} has not been created",
+                    // icon: "assets/income.png",
+                    color: Colors.blue,
+                  );
                 }
               },
               child: AlertDialog(

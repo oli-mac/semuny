@@ -9,6 +9,7 @@ import 'package:semuny/app_view.dart';
 import 'package:semuny/screens/add_income/blocs/create_income_bloc/create_income_bloc.dart';
 import 'package:semuny/screens/add_income/blocs/get_sources_bloc/get_sources_bloc.dart';
 import 'package:semuny/screens/add_income/views/source_creation.dart';
+import 'package:semuny/utils/notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -54,12 +55,24 @@ class _AddIncomeState extends State<AddIncome> {
             context,
             MaterialPageRoute(builder: (context) => const MyAppView()),
           );
+          NotificationService.showNotification(
+            title: "Income Created",
+            body: "Income of ${income.amount}ETB has been created",
+            // icon: "assets/income.png",
+            color: Colors.blue,
+          );
         } else if (state is CreateIncomeLoading) {
           setState(() {
             isLoading = true;
           });
         } else if (state is CreateIncomeFailure) {
           //TODO: Show error message
+          NotificationService.showNotification(
+            title: "Income Creation Failed",
+            body: "Income of ${income.amount}ETB has not been created",
+            // icon: "assets/income.png",
+            color: Colors.blue,
+          );
           setState(() {
             isLoading = false;
           });
